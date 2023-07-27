@@ -37,7 +37,39 @@ export default function Home( {data} ) {
   const cdayTime = data.hourly.is_day.at(data.hourly.time.indexOf(cDateTime))
   const timezone = data.timezone
   const temperature = data.hourly.apparent_temperature.at(data.hourly.time.indexOf(cDateTime))
+  const cardclass = isNightCard(cdayTime)
+  const cardimg = isNightImg(cdayTime)
+  const weatherC = data.hourly.weathercode.at(data.hourly.time.indexOf(cDateTime))
 
+  const weatheric = {
+    "ท้องฟ้าโปร่ง" : {Image : <Image src="/Sun.svg" width={20} height={20}/>},
+    "มีเมฆบางส่วน" : {Image : <Image src="/Cloud Sun 2.svg" width={20} height={20}/>},
+    "ฟ้าครึ้ม" : {Image : <Image src="/Clouds.svg" width={20} height={20}/>},
+    "มีฝนปรอย" : {Image : <Image src="/Cloud Rain.svg" width={20} height={20}/>},
+    "มีฝนตก" : {Image : <Image src="/Cloud Storm.svg" width={20} height={20}/>},
+    "ฝนฟ้าคะนอง" : {Image : <Image src="/Cloud Bolt.svg" width={20} height={20}/>},
+    "มีหมอก" : {Image : <Image src="/Fog.svg" width={20} height={20}/>},
+  }
+
+  const weatherimg = {
+    "ท้องฟ้าโปร่ง" : {Image : <Image src="/Sun.svg" width={120} height={120}/>},
+    "มีเมฆบางส่วน" : {Image : <Image src="/Cloud Sun 2.svg" width={120} height={120}/>},
+    "ฟ้าครึ้ม" : {Image : <Image src="/Clouds.svg" width={120} height={120}/>},
+    "มีฝนปรอย" : {Image : <Image src="/Cloud Rain.svg" width={120} height={120}/>},
+    "มีฝนตก" : {Image : <Image src="/Cloud Storm.svg" width={120} height={120}/>},
+    "ฝนฟ้าคะนอง" : {Image : <Image src="/Cloud Bolt.svg" width={120} height={120}/>},
+    "มีหมอก" : {Image : <Image src="/Fog.svg" width={120} height={120}/>},
+  }
+
+  const weatherState = {
+    0 : {State : "ท้องฟ้าโปร่ง", StateEn : "clearsky"},1 : {State : "ท้องฟ้าโปร่ง", StateEn : "clearsky"}, 2 : {State : "ท้องฟ้าโปร่ง", StateEn : "clearsky"},
+    3 : {State : "มีเมฆบางส่วน", StateEn : "partlycloud"}, 4 : {State : "มีเมฆบางส่วน", StateEn : "partlycloud"},
+    5 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 6 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 7 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 8 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 9 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 10 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 
+    50 : {State : "มีฝนปรอย", StateEn : "drizzle"},
+    60 : {State : "มีฝนตก", StateEn : "rain"}, 
+    95 : {State : "ฝนฟ้าคะนอง", StateEn : "thunderstorm"},97 : {State : "ฝนฟ้าคะนอง", StateEn : "thunderstorm"},
+    40 : {State : "มีหมอก", StateEn : "fog"}
+  }
   
   function indexOfcTime(i){
     if (currentDate.getHours()+i < 24){
@@ -76,47 +108,6 @@ export default function Home( {data} ) {
     }
   }
 
-  function hourlyWeather(i){
-    if(i==0){
-      return
-    }
-  }
-  
-  const weatherC = data.hourly.weathercode.at(data.hourly.time.indexOf(cDateTime))
-
-  const weatheric = {
-    "ท้องฟ้าโปร่ง" : {Image : <Image src="/Sun.svg" width={20} height={20}/>},
-    "มีเมฆบางส่วน" : {Image : <Image src="/Cloud Sun 2.svg" width={20} height={20}/>},
-    "ฟ้าครึ้ม" : {Image : <Image src="/Clouds.svg" width={20} height={20}/>},
-    "มีฝนปรอย" : {Image : <Image src="/Cloud Rain.svg" width={20} height={20}/>},
-    "มีฝนตก" : {Image : <Image src="/Cloud Storm.svg" width={20} height={20}/>},
-    "ฝนฟ้าคะนอง" : {Image : <Image src="/Cloud Bolt.svg" width={20} height={20}/>},
-    "มีหมอก" : {Image : <Image src="/Fog.svg" width={20} height={20}/>},
-  }
-
-  const weatherimg = {
-    "ท้องฟ้าโปร่ง" : {Image : <Image src="/Sun.svg" width={120} height={120}/>},
-    "มีเมฆบางส่วน" : {Image : <Image src="/Cloud Sun 2.svg" width={120} height={120}/>},
-    "ฟ้าครึ้ม" : {Image : <Image src="/Clouds.svg" width={120} height={120}/>},
-    "มีฝนปรอย" : {Image : <Image src="/Cloud Rain.svg" width={120} height={120}/>},
-    "มีฝนตก" : {Image : <Image src="/Cloud Storm.svg" width={120} height={120}/>},
-    "ฝนฟ้าคะนอง" : {Image : <Image src="/Cloud Bolt.svg" width={120} height={120}/>},
-    "มีหมอก" : {Image : <Image src="/Fog.svg" width={120} height={120}/>},
-  }
-
-  const weatherState = {
-    0 : {State : "ท้องฟ้าโปร่ง", StateEn : "clearsky"},1 : {State : "ท้องฟ้าโปร่ง", StateEn : "clearsky"}, 2 : {State : "ท้องฟ้าโปร่ง", StateEn : "clearsky"},
-    3 : {State : "มีเมฆบางส่วน", StateEn : "partlycloud"}, 4 : {State : "มีเมฆบางส่วน", StateEn : "partlycloud"},
-    5 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 6 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 7 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 8 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 9 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 10 : {State : "ฟ้าครึ้ม", StateEn : "overcast"}, 
-    50 : {State : "มีฝนปรอย", StateEn : "drizzle"},
-    60 : {State : "มีฝนตก", StateEn : "rain"}, 
-    95 : {State : "ฝนฟ้าคะนอง", StateEn : "thunderstorm"},97 : {State : "ฝนฟ้าคะนอง", StateEn : "thunderstorm"},
-    40 : {State : "มีหมอก", StateEn : "fog"}
-  }
-
-  const cardclass = isNightCard(cdayTime)
-  const cardimg = isNightImg(cdayTime)
-
   function isNightCard(t){
     if( t == 0 ){
       return "nighttime"
@@ -142,6 +133,7 @@ export default function Home( {data} ) {
       return 
     }
   }
+
 
   return (
     <>
@@ -210,7 +202,7 @@ export default function Home( {data} ) {
 
                 <div class="flex-forecast-item">
                   <div class="forecasttime">{hourlyTime(7)}</div>
-                  <div class="weather-icon">{isNightIc(-1)}</div>
+                  <div class="weather-icon">{isNightIc(isdayOfcTime(7))}</div>
                   <div class="forecasttemp">{hourlyTemp(7)}</div>
                 </div>
           </div>
