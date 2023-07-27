@@ -37,18 +37,49 @@ export default function Home( {data} ) {
   const cdayTime = data.hourly.is_day.at(data.hourly.time.indexOf(cDateTime))
   const timezone = data.timezone
   const temperature = data.hourly.apparent_temperature.at(data.hourly.time.indexOf(cDateTime))
+
   
   function indexOfcTime(i){
-    return data.hourly.time.indexOf(cYear +"-" + cMonth +"-"+ cDate + "T" + pad(currentDate.getHours()+i)+":"+"00")
+    if (currentDate.getHours()+i < 24){
+      return data.hourly.time.indexOf(cYear +"-" + cMonth +"-"+ cDate + "T" + pad(currentDate.getHours()+i)+":"+"00")
+    }else {
+      return -1
+    }
   } 
 
   function isdayOfcTime(i){
-    return data.hourly.is_day.at(indexOfcTime(i))
+    if ( currentDate.getHours()+i <= 23 ){
+      return data.hourly.is_day.at(indexOfcTime(i))
+    }else{
+      return
+    }
   }
 
   function splitTimezone(timezone){
     const textArray = timezone.split("/")
     return textArray.at(textArray.length-1)
+  }
+
+  function hourlyTime(i){
+    if (currentDate.getHours()+i <= 23){
+      return pad(currentDate.getHours()+i)+":"+"00"
+    }else {
+      return "-"
+    }
+  }
+
+  function hourlyTemp(i){
+    if (currentDate.getHours()+i <= 23){
+      return data.hourly.apparent_temperature.at(indexOfcTime(i))+data.hourly_units.apparent_temperature
+    }else{
+      return "-"
+    }
+  }
+
+  function hourlyWeather(i){
+    if(i==0){
+      return
+    }
   }
   
   const weatherC = data.hourly.weathercode.at(data.hourly.time.indexOf(cDateTime))
@@ -105,8 +136,10 @@ export default function Home( {data} ) {
   function isNightIc(t){
     if( t == 0){
       return <Image src="/Moon Stars.svg" width={20} height={20}/>
-    }else{
+    }else if( t >=1 ){
       return weatheric[weatherState[weatherC].State].Image
+    }else {
+      return 
     }
   }
 
@@ -131,55 +164,54 @@ export default function Home( {data} ) {
 
         <div class="flex-item-right">
           <div class="forecast-container">
-                  
                 <div class="flex-forecast-head">พยากรณ์อากาศ</div>
 
                 <div class="flex-forecast-item">
-                  <div class="forecasttime">{pad(currentDate.getHours())+":"+"00"}</div>
+                  <div class="forecasttime">{hourlyTime(0)}</div>
                   <div class="weather-icon">{isNightIc(isdayOfcTime(0))}</div>
-                  <div class="forecasttemp">{data.hourly.apparent_temperature.at(indexOfcTime(0))}{data.hourly_units.apparent_temperature}</div>
+                  <div class="forecasttemp">{hourlyTemp(0)}</div>
                 </div>
 
                 <div class="flex-forecast-item">
-                  <div class="forecasttime">{pad(currentDate.getHours()+1)+":"+"00"}</div>
+                  <div class="forecasttime">{hourlyTime(1)}</div>
                   <div class="weather-icon">{isNightIc(isdayOfcTime(1))}</div>
-                  <div class="forecasttemp">{data.hourly.apparent_temperature.at(indexOfcTime(1))}{data.hourly_units.apparent_temperature}</div>
+                  <div class="forecasttemp">{hourlyTemp(1)}</div>
                 </div>
 
                 <div class="flex-forecast-item">
-                  <div class="forecasttime">{pad(currentDate.getHours()+2)+":"+"00"}</div>
+                  <div class="forecasttime">{hourlyTime(2)}</div>
                   <div class="weather-icon">{isNightIc(isdayOfcTime(2))}</div>
-                  <div class="forecasttemp">{data.hourly.apparent_temperature.at(indexOfcTime(2))}{data.hourly_units.apparent_temperature}</div>
+                  <div class="forecasttemp">{hourlyTemp(2)}</div>
                 </div>   
 
                 <div class="flex-forecast-item">
-                  <div class="forecasttime">{pad(currentDate.getHours()+3)+":"+"00"}</div>
+                  <div class="forecasttime">{hourlyTime(3)}</div>
                   <div class="weather-icon">{isNightIc(isdayOfcTime(3))}</div>
-                  <div class="forecasttemp">{data.hourly.apparent_temperature.at(indexOfcTime(3))}{data.hourly_units.apparent_temperature}</div>
+                  <div class="forecasttemp">{hourlyTemp(3)}</div>
                 </div>
                   
                 <div class="flex-forecast-item">
-                  <div class="forecasttime">{pad(currentDate.getHours()+4)+":"+"00"}</div>
+                  <div class="forecasttime">{hourlyTime(4)}</div>
                   <div class="weather-icon">{isNightIc(isdayOfcTime(4))}</div>
-                  <div class="forecasttemp">{data.hourly.apparent_temperature.at(indexOfcTime(4))}{data.hourly_units.apparent_temperature}</div>
+                  <div class="forecasttemp">{hourlyTemp(4)}</div>
                 </div>
 
                 <div class="flex-forecast-item">
-                  <div class="forecasttime">{pad(currentDate.getHours()+5)+":"+"00"}</div>
+                  <div class="forecasttime">{hourlyTime(5)}</div>
                   <div class="weather-icon">{isNightIc(isdayOfcTime(5))}</div>
-                  <div class="forecasttemp">{data.hourly.apparent_temperature.at(indexOfcTime(5))}{data.hourly_units.apparent_temperature}</div>
+                  <div class="forecasttemp">{hourlyTemp(5)}</div>
                 </div>
 
                 <div class="flex-forecast-item">
-                  <div class="forecasttime">{pad(currentDate.getHours()+6)+":"+"00"}</div>
+                  <div class="forecasttime">{hourlyTime(6)}</div>
                   <div class="weather-icon">{isNightIc(isdayOfcTime(6))}</div>
-                  <div class="forecasttemp">{data.hourly.apparent_temperature.at(indexOfcTime(6))}{data.hourly_units.apparent_temperature}</div>
+                  <div class="forecasttemp">{hourlyTemp(6)}</div>
                 </div>
 
                 <div class="flex-forecast-item">
-                  <div class="forecasttime">{pad(currentDate.getHours()+7)+":"+"00"}</div>
-                  <div class="weather-icon">{isNightIc(isdayOfcTime(7))}</div>
-                  <div class="forecasttemp">{data.hourly.apparent_temperature.at(indexOfcTime(7))}{data.hourly_units.apparent_temperature}</div>
+                  <div class="forecasttime">{hourlyTime(7)}</div>
+                  <div class="weather-icon">{isNightIc(-1)}</div>
+                  <div class="forecasttemp">{hourlyTemp(7)}</div>
                 </div>
           </div>
         </div>
