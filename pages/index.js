@@ -26,6 +26,7 @@ function currentMonth(){
 }
 
 
+
 export default function Home( {data} ) {
   const currentDate = new Date()
   const cDate = pad(currentDate.getDate())
@@ -37,9 +38,8 @@ export default function Home( {data} ) {
   const cdayTime = data.hourly.is_day.at(data.hourly.time.indexOf(cDateTime))
   const timezone = data.timezone
   const temperature = data.hourly.apparent_temperature.at(data.hourly.time.indexOf(cDateTime))
-  const cardclass = isNightCard(cdayTime)
-  const cardimg = isNightImg(cdayTime)
   const weatherC = data.hourly.weathercode.at(data.hourly.time.indexOf(cDateTime))
+
 
   const weatheric = {
     "ท้องฟ้าโปร่ง" : {Image : <Image src="/Sun.svg" width={20} height={20}/>},
@@ -71,50 +71,6 @@ export default function Home( {data} ) {
     40 : {State : "มีหมอก", StateEn : "fog"}
   }
   
-  function indexOfcTime(i){
-    if (currentDate.getHours()+i < 24){
-      return data.hourly.time.indexOf(cYear +"-" + cMonth +"-"+ cDate + "T" + pad(currentDate.getHours()+i)+":"+"00")
-    }else {
-      return -1
-    }
-  } 
-
-  function isdayOfcTime(i){
-    if ( currentDate.getHours()+i <= 23 ){
-      return data.hourly.is_day.at(indexOfcTime(i))
-    }else{
-      return
-    }
-  }
-
-  function splitTimezone(timezone){
-    const textArray = timezone.split("/")
-    return textArray.at(textArray.length-1)
-  }
-
-  function hourlyTime(i){
-    if (currentDate.getHours()+i <= 23){
-      return pad(currentDate.getHours()+i)+":"+"00"
-    }else {
-      return "-"
-    }
-  }
-
-  function hourlyTemp(i){
-    if (currentDate.getHours()+i <= 23){
-      return data.hourly.apparent_temperature.at(indexOfcTime(i))+data.hourly_units.apparent_temperature
-    }else{
-      return "-"
-    }
-  }
-
-  function isNightCard(t){
-    if( t == 0 ){
-      return "nighttime"
-    } else {
-      return weatherState[weatherC].StateEn
-    }
-  }
 
   function isNightImg(t){
     if( t == 0 ){
@@ -134,6 +90,52 @@ export default function Home( {data} ) {
     }
   }
 
+  function indexOfcTime(i){
+    if (currentDate.getHours()+i < 24){
+      return data.hourly.time.indexOf(cYear +"-" + cMonth +"-"+ cDate + "T" + pad(currentDate.getHours()+i)+":"+"00")
+    }else {
+      return -1
+    }
+  } 
+  
+  function isdayOfcTime(i){
+    if ( currentDate.getHours()+i <= 23 ){
+      return data.hourly.is_day.at(indexOfcTime(i))
+    }else{
+      return
+    }
+  }
+  
+  function splitTimezone(timezone){
+    const textArray = timezone.split("/")
+    return textArray.at(textArray.length-1)
+  }
+  
+  function hourlyTime(i){
+    if (currentDate.getHours()+i <= 23){
+      return pad(currentDate.getHours()+i)+":"+"00"
+    }else {
+      return "-"
+    }
+  }
+  
+  function hourlyTemp(i){
+    if (currentDate.getHours()+i <= 23){
+      return data.hourly.apparent_temperature.at(indexOfcTime(i))+data.hourly_units.apparent_temperature
+    }else{
+      return "-"
+    }
+  }
+  
+  function isNightCard(t){
+    if( t == 0 ){
+      return "nighttime"
+    } else {
+      return weatherState[weatherC].StateEn
+    }
+  }
+  
+
 
   return (
     <>
@@ -141,14 +143,14 @@ export default function Home( {data} ) {
       <div class="flex-container">
         
         <div class="flex-item-left">
-          <div class={cardclass}>
+          <div class={isNightCard(cdayTime)}>
               <div class="card-container">
                   <div class="card-text-normal">{weatherState[weatherC].State}</div>
                   <div class="card-text-h1">{temperature}{data.hourly_units.apparent_temperature}</div>
                   <div class="card-text-label">{splitTimezone(timezone)}</div>
                   <div class="card-text-normal">{cDay}</div>
               </div>
-              <div class="card-img">{cardimg}</div>
+              <div class="card-img">{isNightImg(cdayTime)}</div>
           </div>
 
         </div>
